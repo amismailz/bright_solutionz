@@ -1,0 +1,155 @@
+@font-face {
+    font-family: 'SST Arabic Bold';
+    src: url('../fonts/SSTArabic/arfonts-sst-arabic-bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+body {
+    background: linear-gradient(to bottom, #5291d2, #6db3ec);
+    font-family: 'SST Arabic Bold', sans-serif;
+    direction: rtl;
+}
+
+h1, h2, h3, h4, h5, h6, label, .form-control, .btn {
+    font-family: 'SST Arabic Bold', sans-serif !important;
+}
+
+.auth-card {
+    background-color: white;
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 10px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.form-control {
+    border-radius: .9rem;
+    direction: rtl;
+    line-height: 2;
+}
+.form-select {
+    direction: rtl;
+    line-height: 2;
+    border-radius: .9rem;
+}
+
+
+
+.submit-btn {
+    background-color: #28ACDB;
+    color: white;
+    border-radius: .9rem;
+    padding: 10px;
+    font-weight: bold;
+}
+
+.submit-btn:hover {
+    background-color: #165c94;
+    color: white;
+}
+
+/* حاوية الحقل */
+.select2-container--default .select2-selection--multiple {
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: .9rem;
+    padding: 6px 12px;
+    height: auto;
+    min-height: 48px;
+    font-family: 'SST Arabic Bold', sans-serif;
+    font-size: 1rem;
+    direction: rtl;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    line-height: 1;
+}
+
+/* الكلمات المختارة */
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #28ACDB;
+    border: none;
+    color: white;
+    border-radius: .9rem;
+    padding: 3px 10px;
+    margin: 3px 5px;
+    font-size: 0.9rem;
+}
+
+/* حقل البحث داخل السلكت */
+.select2-container--default .select2-selection--multiple .select2-search__field {
+    font-family: 'SST Arabic Bold', sans-serif;
+    font-size: 1rem;
+    direction: rtl;
+    margin: 5px 0;
+    border: none;
+    outline: none;
+}
+
+.select2-container--default .select2-selection--multiple:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+.select2-selection__choice__remove:hover {
+    background-color: transparent !important;
+}
+.select2-selection__choice__remove:focus {
+    background-color: transparent !important;
+}
+
+
+.select2-container--default .select2-selection--multiple:focus-visible {
+    outline: none;
+}
+
+
+.select2-container .select2-results__option {
+    font-family: 'SST Arabic Bold', sans-serif;
+    text-align: right;
+    padding: 8px 12px;
+}
+
+
+
+.custom-box-input {
+    width: 20px;
+    height: 20px;
+    border-radius: 8px;
+    border: 2px solid #28ACDB;
+    background-color: #fff;
+    appearance: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.custom-box-input:checked {
+    background-color: #28ACDB;
+}
+
+.custom-box-input:checked::before {
+    content: '✔';
+    color: #fff;
+    font-size: 13px;
+    position: absolute;
+    top: 0;
+    left: 4px;
+}
+.input-group > .form-select {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-right: none;
+}
+
+.input-group > .btn {
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+}
+
+
+.select-add + .select2-container .select2-selection--multiple {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-left: unset;
+}

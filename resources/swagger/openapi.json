@@ -1,0 +1,1403 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Insta Car API",
+        "version": "1.0.0",
+        "description": "API documentation of InstaCar in the system."
+    },
+    "paths": {
+        "/api/v1/": {
+            "get": {
+                "summary": "Home page",
+                "responses": {
+                    "200": {
+                        "description": "Welcome to InstaCar API"
+                    }
+                }
+            }
+        },
+        "/api/v1/home-banners": {
+            "get": {
+                "summary": "List all home banners",
+                "tags": ["Home Banners"],
+                "responses": {
+                    "200": {
+                        "description": "A list of home banners",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/HomeBanner"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/home-banners/{id}": {
+            "get": {
+                "summary": "Get a specific home banner",
+                "tags": ["Home Banners"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A home banner",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HomeBanner"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/brands": {
+            "get": {
+                "summary": "List all brands",
+                "tags": ["Brands"],
+                "responses": {
+                    "200": {
+                        "description": "A list of brands",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Brand"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new brand",
+                "tags": ["Brands"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateBrandRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Brand created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Brand"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/v1/brands/{id}": {
+            "get": {
+                "summary": "Get a specific brand",
+                "tags": ["Brands"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The ID of the brand to retrieve"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Brand details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Brand"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Brand not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Update or delete a brand",
+                "tags": ["Brands"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "The ID of the brand to update or delete"
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "_method": {
+                                        "type": "string",
+                                        "enum": ["PUT", "DELETE"],
+                                        "description": "HTTP method to simulate. Use 'PUT' to update and 'DELETE' to delete."
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Name of the brand (required for 'PUT')."
+                                    }
+                                },
+                                "required": ["_method"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Brand"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Brand not found"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        },
+        "/api/v1/brands/{ids}/car-models": {
+            "get": {
+                "summary": "List car models for a specific brands",
+                "tags": ["Brands"],
+                "parameters": [
+                    {
+                        "name": "ids",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
+        "/vehicles": {
+            "tags": ["Vehicles"],
+            "get": {
+                "tags": ["Vehicles"],
+                "summary": "Get filtered vehicles",
+                "description": "Fetches a list of vehicles based on the provided filter criteria.",
+                "parameters": [
+                    {
+                        "name": "cash_price_min",
+                        "in": "query",
+                        "description": "Minimum cash price of the vehicle.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
+                        }
+                    },
+                    {
+                        "name": "cash_price_max",
+                        "in": "query",
+                        "description": "Maximum cash price of the vehicle.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1000000
+                        }
+                    },
+                    {
+                        "name": "model_year_min",
+                        "in": "query",
+                        "description": "Minimum model year of the vehicle.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 2021
+                        }
+                    },
+                    {
+                        "name": "model_year_max",
+                        "in": "query",
+                        "description": "Maximum model year of the vehicle.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 20255
+                        }
+                    },
+                    {
+                        "name": "models",
+                        "in": "query",
+                        "description": "Comma-separated list of model IDs.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "80,99,89,85"
+                        }
+                    },
+                    {
+                        "name": "installment_amount_min",
+                        "in": "query",
+                        "description": "Minimum installment amount.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "nullable": true
+                        }
+                    },
+                    {
+                        "name": "installment_amount_max",
+                        "in": "query",
+                        "description": "Maximum installment amount.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1000000
+                        }
+                    },
+                    {
+                        "name": "months_count_min",
+                        "in": "query",
+                        "description": "Minimum months count for installment.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
+                        }
+                    },
+                    {
+                        "name": "months_count_max",
+                        "in": "query",
+                        "description": "Maximum months count for installment.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1000000
+                        }
+                    },
+                    {
+                        "name": "deposit_amount_min",
+                        "in": "query",
+                        "description": "Minimum deposit amount.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
+                        }
+                    },
+                    {
+                        "name": "deposit_amount_max",
+                        "in": "query",
+                        "description": "Maximum deposit amount.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10000000
+                        }
+                    },
+                    {
+                        "name": "shapes",
+                        "in": "query",
+                        "description": "Comma-separated list of vehicle shapes.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "motorcycle"
+                        }
+                    },
+                    {
+                        "name": "used",
+                        "in": "query",
+                        "description": "Indicates if the vehicle is used.",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "example": true
+                        }
+                    },
+                    {
+                        "name": "kilometers_min",
+                        "in": "query",
+                        "description": "Minimum kilometers driven.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
+                        }
+                    },
+                    {
+                        "name": "kilometers_max",
+                        "in": "query",
+                        "description": "Maximum kilometers driven.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10000000
+                        }
+                    },
+                    {
+                        "name": "engine_capacity_min",
+                        "in": "query",
+                        "description": "Minimum engine capacity.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 0
+                        }
+                    },
+                    {
+                        "name": "engine_capacity_max",
+                        "in": "query",
+                        "description": "Maximum engine capacity.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 10000000
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search query string.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Model 2 2021"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    },
+                    {
+                        "name": "brands",
+                        "in": "query",
+                        "description": "Comma-separated list of brand IDs.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Vehicle"
+                                            }
+                                        },
+                                        "pagination": {
+                                            "$ref": "#/components/schemas/Pagination"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/vehicles/{id}": {
+            "summary": "Get a specific vehicle by ID",
+            "tags": ["Vehicles"],
+            "get": {
+                "tags": ["Vehicles"],
+                "summary": "Get vehicle details by ID",
+                "operationId": "getVehicleById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 3
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vehicle details retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "success": true,
+                                    "message": "Success",
+                                    "data": {
+                                        "id": 3,
+                                        "brand_id": 13,
+                                        "car_model_id": 63,
+                                        "used": 0,
+                                        "shape": "crossover",
+                                        "model_year": "2024",
+                                        "category": "Sedan",
+                                        "exterior_color": "Red",
+                                        "interior_color": "Black",
+                                        "origin": "Imported",
+                                        "fuel_type": "Gasoline",
+                                        "transmission_type": "Automatic",
+                                        "cylinders": 4,
+                                        "engine_capacity": 1,
+                                        "drive_type": "FWD",
+                                        "keys_count": 1,
+                                        "seats_count": 5,
+                                        "doors_count": 4,
+                                        "fuel_consumption": 11,
+                                        "kilometers": 32082,
+                                        "is_visible": 0,
+                                        "is_sold": 1,
+                                        "is_popular": 0,
+                                        "cash_price": 31812,
+                                        "discount": 2531,
+                                        "home_page_display": 1,
+                                        "created_at": "2025-01-02T14:47:43.000000Z",
+                                        "updated_at": "2025-01-02T14:47:43.000000Z",
+                                        "external_images": [
+                                            "http://127.0.0.1:8000/storage/41/6.jpg",
+                                            "http://127.0.0.1:8000/storage/42/qwgd.jpg",
+                                            "http://127.0.0.1:8000/storage/43/yew.jpg"
+                                        ],
+                                        "internal_images": [
+                                            "http://127.0.0.1:8000/storage/44/ertqq.jpg",
+                                            "http://127.0.0.1:8000/storage/45/ewtq.jpg",
+                                            "http://127.0.0.1:8000/storage/46/qrq.jpg"
+                                        ],
+                                        "image": "http://127.0.0.1:8000/storage/40/wyt.jpg",
+                                        "brand": {
+                                            "id": 13,
+                                            "name": "Jaguar",
+                                            "is_visible": 0,
+                                            "created_at": "2025-01-02T14:47:29.000000Z",
+                                            "updated_at": "2025-01-02T14:47:29.000000Z",
+                                            "image": "http://127.0.0.1:8000/storage/13/jaguar-logo.png"
+                                        },
+                                        "car_model": {
+                                            "id": 63,
+                                            "brand_id": 13,
+                                            "name": "Model 3 for Jaguar",
+                                            "created_at": "2025-01-02T14:47:42.000000Z",
+                                            "updated_at": "2025-01-02T14:47:42.000000Z"
+                                        },
+                                        "installment_methods": [
+                                            {
+                                                "id": 7,
+                                                "vehicle_id": 3,
+                                                "deposit_amount": 6759,
+                                                "months_count": 21,
+                                                "installment_amount": 882
+                                            },
+                                            {
+                                                "id": 8,
+                                                "vehicle_id": 3,
+                                                "deposit_amount": 9638,
+                                                "months_count": 35,
+                                                "installment_amount": 687
+                                            },
+                                            {
+                                                "id": 9,
+                                                "vehicle_id": 3,
+                                                "deposit_amount": 9469,
+                                                "months_count": 27,
+                                                "installment_amount": 1125
+                                            }
+                                        ],
+                                        "safety_features": {
+                                            "id": 3,
+                                            "vehicle_id": 3,
+                                            "abs": 1,
+                                            "ebd": 1,
+                                            "airbags": 0
+                                        },
+                                        "comfort_features": {
+                                            "id": 3,
+                                            "vehicle_id": 3,
+                                            "leather_seats": 1,
+                                            "rear_ac_vents": 1
+                                        },
+                                        "technology_features": {
+                                            "id": 3,
+                                            "vehicle_id": 3,
+                                            "bluetooth": 1,
+                                            "usb_input": 1
+                                        },
+                                        "exterior_features": {
+                                            "id": 3,
+                                            "vehicle_id": 3,
+                                            "electric_mirrors": 1,
+                                            "panoramic_sunroof": 1
+                                        },
+                                        "inspections": [
+                                            {
+                                                "id": 1,
+                                                "category_id": 1,
+                                                "name": "الصوفة الامامية"
+                                            }
+                                        ],
+                                        "inspection_categories_status": [
+                                            {
+                                                "category_id": 1,
+                                                "category_name": "Engine",
+                                                "notes_count": 1
+                                            },
+                                            {
+                                                "category_id": 2,
+                                                "category_name": "Body",
+                                                "notes_count": 0
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Vehicle not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/cars": {
+            "get": {
+                "summary": "Get all cars",
+                "tags": ["Cars"],
+                "responses": {
+                    "200": {
+                        "description": "A list of cars",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Car"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new car",
+                "tags": ["Cars"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Car"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Car created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Car"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/cars/{id}": {
+            "get": {
+                "summary": "Get a car by ID",
+                "tags": ["Cars"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A single car",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Car"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Car not found"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Handle update or delete car",
+                "tags": ["Cars"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "_method": {
+                                        "type": "string",
+                                        "enum": ["PUT", "DELETE"],
+                                        "description": "HTTP method to simulate. Use 'PUT' to update and 'DELETE' to delete."
+                                    },
+                                    "$ref": "#/components/schemas/Car",
+                                    "data": {
+                                        "type": "object",
+                                        "$ref": "#/components/schemas/Car",
+                                        "description": "Car data for updates (required if _method is 'PUT')."
+                                    }
+                                },
+                                "required": ["_method"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car updated successfully (for PUT) or deleted (for DELETE)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Car"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Car not found"
+                    },
+                    "204": {
+                        "description": "Car deleted successfully"
+                    }
+                }
+            }
+        },
+        "/car-models": {
+            "get": {
+                "summary": "Get all car models",
+                "operationId": "getAllCarModels",
+                "tags": ["Car Models"],
+                "responses": {
+                    "200": {
+                        "description": "A list of car models",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CarModel"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new car model",
+                "operationId": "createCarModel",
+                "tags": ["Car Models"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCarModelRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Car model created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/car-models/{id}": {
+            "get": {
+                "summary": "Get a specific car model by ID",
+                "operationId": "getCarModelById",
+                "tags": ["Car Models"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "The ID of the car model",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A single car model",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Update or delete a car model",
+                "operationId": "CarModelSingleOperation",
+                "tags": ["Car Models"],
+                "parameters": [
+                    {
+                        "_method": {
+                            "type": "string",
+                            "enum": ["PUT", "DELETE"],
+                            "description": "HTTP method to simulate. Use 'PUT' to update and 'DELETE' to delete."
+                        },
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "The ID of the car model",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCarModelRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Car model updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarModel"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/filters": {
+            "get": {
+                "summary": "Get all filters",
+                "operationId": "getAllFilters",
+                "tags": ["Filters"],
+                "responses": {
+                    "200": {
+                        "description": "A list of filters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Filter"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HomeBanner": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title_one": {
+                        "type": "string",
+                        "example": "Home Banner 1"
+                    },
+                    "title_two": {
+                        "type": "string",
+                        "example": "Home Banner 2"
+                    },
+                    "title_three": {
+                        "type": "string",
+                        "example": "Home Banner 3"
+                    },
+                    "image": {
+                        "type": "string",
+                        "example": "https://example.com/banner1.jpg"
+                    }
+                }
+            },
+            "CarModel": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "brand_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Model S"
+                    }
+                }
+            },
+            "CreateCarModelRequest": {
+                "type": "object",
+                "properties": {
+                    "brand_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Model X"
+                    }
+                },
+                "required": ["brand_id", "name"]
+            },
+            "UpdateCarModelRequest": {
+                "type": "object",
+                "properties": {
+                    "brand_id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Model Y"
+                    }
+                },
+                "required": ["name"]
+            },
+            "Brand": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "1"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Toyota"
+                    },
+                    "image": {
+                        "type": "string",
+                        "example": "https://example.com/toyota.jpg"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "CreateBrandRequest": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Toyota"
+                    }
+                }
+            },
+            "Car": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "brand_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "car_model_id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "new"
+                    },
+                    "purchase_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-01-01"
+                    },
+                    "plate_number": {
+                        "type": "string",
+                        "example": "ABC1234"
+                    },
+                    "purchase_classification": {
+                        "type": "string",
+                        "example": "Cash"
+                    },
+                    "maintenance_cost_expectation": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1500.0
+                    },
+                    "car_source": {
+                        "type": "string",
+                        "example": "Auction"
+                    },
+                    "clearance_status": {
+                        "type": "string",
+                        "example": "Cleared"
+                    },
+                    "cash_purchase": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 20000.0
+                    },
+                    "maintenance_parts": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 500.0
+                    },
+                    "polishing": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 200.0
+                    },
+                    "periodic_check": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 100.0
+                    },
+                    "registration": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 300.0
+                    },
+                    "transport": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 150.0
+                    },
+                    "commission_owner": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 100.0
+                    },
+                    "commission": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 200.0
+                    },
+                    "cost_correction": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 50.0
+                    },
+                    "insurance_value": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1500.0
+                    },
+                    "tracking_number": {
+                        "type": "integer",
+                        "example": 123456
+                    },
+                    "owner": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "johndoe"
+                    },
+                    "sale_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-06-15"
+                    },
+                    "sale_insurance": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1200.0
+                    },
+                    "delegation": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 300.0
+                    },
+                    "advance_payment": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 5000.0
+                    },
+                    "installment_value": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1000.0
+                    },
+                    "installments_count": {
+                        "type": "integer",
+                        "example": 12
+                    },
+                    "installment_day_in_month": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "extension": {
+                        "type": "string",
+                        "example": "6 months"
+                    },
+                    "replacement": {
+                        "type": "string",
+                        "example": "Engine"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Car is in good condition."
+                    },
+                    "insurance_refund": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 300.0
+                    },
+                    "accident_fine": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 500.0
+                    },
+                    "submit_claim": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "accident_compensation": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 2000.0
+                    },
+                    "win_refund_form": {
+                        "type": "string",
+                        "example": "Form123"
+                    },
+                    "win_insurance_refund": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 500.0
+                    },
+                    "final_insurance_and_transportation": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 2500.0
+                    },
+                    "insurance_end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2024-06-30"
+                    },
+                    "client_insurance_end_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-06-30"
+                    },
+                    "months_count": {
+                        "type": "integer",
+                        "example": 24
+                    }
+                },
+                "required": [
+                    "brand_id",
+                    "car_model_id",
+                    "status",
+                    "purchase_date",
+                    "plate_number"
+                ]
+            },
+            "Offer": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Offer Title"
+                    },
+                    "link": {
+                        "type": "string",
+                        "example": "https://example.com/offer"
+                    },
+                    "is_visible": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "image_small": {
+                        "type": "string",
+                        "example": "https://example.com/small.jpg"
+                    },
+                    "image_medium": {
+                        "type": "string",
+                        "example": "https://example.com/medium.jpg"
+                    },
+                    "image_large": {
+                        "type": "string",
+                        "example": "https://example.com/large.jpg"
+                    }
+                }
+            },
+            "Vehicle": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "brand_id": {
+                        "type": "integer"
+                    },
+                    "car_model_id": {
+                        "type": "integer"
+                    },
+                    "used": {
+                        "type": "boolean"
+                    },
+                    "shape": {
+                        "type": "string"
+                    },
+                    "model_year": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "exterior_color": {
+                        "type": "string"
+                    },
+                    "interior_color": {
+                        "type": "string"
+                    },
+                    "origin": {
+                        "type": "string"
+                    },
+                    "fuel_type": {
+                        "type": "string"
+                    },
+                    "transmission_type": {
+                        "type": "string"
+                    },
+                    "cylinders": {
+                        "type": "integer"
+                    },
+                    "engine_capacity": {
+                        "type": "integer"
+                    },
+                    "drive_type": {
+                        "type": "string"
+                    },
+                    "keys_count": {
+                        "type": "integer"
+                    },
+                    "seats_count": {
+                        "type": "integer"
+                    },
+                    "doors_count": {
+                        "type": "integer"
+                    },
+                    "fuel_consumption": {
+                        "type": "integer"
+                    },
+                    "kilometers": {
+                        "type": "integer"
+                    },
+                    "is_visible": {
+                        "type": "boolean"
+                    },
+                    "is_sold": {
+                        "type": "boolean"
+                    },
+                    "is_popular": {
+                        "type": "boolean"
+                    },
+                    "cash_price": {
+                        "type": "integer"
+                    },
+                    "discount": {
+                        "type": "integer"
+                    },
+                    "home_page_display": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Filter": {
+                "type": "object",
+                "properties": {
+                    "brands": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Brand"
+                        }
+                    },
+                    "car_models": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CarModel"
+                        }
+                    },
+                    "max_cash_price": {
+                        "type": "integer"
+                    },
+                    "min_cash_price": {
+                        "type": "integer"
+                    },
+                    "max_model_year": {
+                        "type": "integer"
+                    },
+                    "min_model_year": {
+                        "type": "integer"
+                    },
+                    "max_kilometers": {
+                        "type": "integer"
+                    },
+                    "min_kilometers": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "pagination": {
+                "type": "object",
+                "properties": {
+                    "total": {
+                        "type": "integer"
+                    },
+                    "last_page": {
+                        "type": "integer"
+                    },
+                    "current_page": {
+                        "type": "integer"
+                    },
+                    "per_page": {
+                        "type": "integer"
+                    }
+                }
+            }
+        }
+    }
+}
